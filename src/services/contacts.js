@@ -7,3 +7,28 @@ export const getContacts = async () => {
 export const getContactsById = async (id) => {
   return await Contact.findById(id);
 };
+
+export const createContact = async (contact) => {
+  return await Contact.create(contact);
+};
+
+export const updateContact = async (id, contact) => {
+  return await Contact.findByIdAndUpdate(id, contact, { new: true });
+};
+
+export const deleteContact = async (id) => {
+  return await Contact.findByIdAndDelete(id);
+};
+
+export const replaceContact = async (id, contact) => {
+  const result = await Contact.findByIdAndUpdate(id, contact, {
+    new: true,
+    upsert: true,
+    includeResultMetadata: true,
+  });
+
+  return {
+    value: result.value,
+    updatedExisting: result.lastErrorObject.updatedExisting,
+  };
+};
