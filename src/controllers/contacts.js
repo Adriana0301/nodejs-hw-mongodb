@@ -48,8 +48,8 @@ export async function updateContactController(req, res) {
     throw createHttpError(404, 'Contact not found');
   }
   const result = await updateContact(id, contact);
-  res.status(201).json({
-    status: 201,
+  res.status(200).json({
+    status: 200,
     message: 'Successfully patched a contact!',
     data: result,
   });
@@ -63,9 +63,8 @@ export async function deleteContactController(req, res) {
   }
 
   res.json({
-    status: 200,
+    status: 204,
     message: 'Student deleted successfully',
-    data: result,
   });
 }
 
