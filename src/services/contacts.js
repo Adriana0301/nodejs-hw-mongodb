@@ -13,7 +13,10 @@ export const createContact = async (contact) => {
 };
 
 export const updateContact = async (id, contact) => {
-  return await Contact.findByIdAndUpdate(id, contact, { new: true });
+  return await Contact.findByIdAndUpdate(id, contact, {
+    new: true,
+    runValidators: true,
+  });
 };
 
 export const deleteContact = async (id) => {

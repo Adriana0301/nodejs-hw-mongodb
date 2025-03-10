@@ -22,9 +22,10 @@ function setupServer() {
 
   app.use(router);
 
-  app.use('*', notFoundHandler);
+  app.use(notFoundHandler);
 
   app.use(errorHandler);
+
   app.listen(PORT, () => console.log(`✅ Server is running on port ${PORT}`));
 }
 
