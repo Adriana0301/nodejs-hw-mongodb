@@ -41,31 +41,33 @@ export async function createContactController(req, res) {
   });
 }
 
-export async function updateContactController(req, res) {
-  const { id } = req.params;
-  const contact = req.body;
-  if (!contact) {
-    throw createHttpError(404, 'Contact not found');
+export async function updateContactController(req, res, next) {
+  try {
+    const { id } = req.params;
+    const updatedContact = await updateContact(id, req.body);
+
+    if (!updatedContact) {
+      return next(createHttpError(404, 'Contact not found'));
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully patched a contact!',
+      data: updatedContact,
+    });
+  } catch (error) {
+    next(error);
   }
-  const result = await updateContact(id, contact);
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully patched a contact!',
-    data: result,
-  });
 }
 
 export async function deleteContactController(req, res) {
   const { id } = req.params;
   const result = await deleteContact(id);
-  if (result === null) {
-    throw new createHttpError.NotFound('Student not found');
+  if (!result) {
+    throw createHttpError(404, 'Contact not found');
   }
 
-  res.json({
-    status: 204,
-    message: 'Student deleted successfully',
-  });
+  res.status(204).send();
 }
 
 export async function replaceStudentController(req, res) {
