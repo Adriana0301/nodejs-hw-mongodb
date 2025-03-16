@@ -8,7 +8,7 @@ import {
   replaceStudentController,
   updateContactController,
 } from '../controllers/contacts.js';
-import { isValidID } from '../middlewares/isValidId.js';
+import { isValidID } from '../middlewares/isValidID.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
   createContactSchema,
