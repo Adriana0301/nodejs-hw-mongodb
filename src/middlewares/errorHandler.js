@@ -4,6 +4,7 @@ export function errorHandler(error, req, res, next) {
     return res.status(error.status).json({
       status: error.status,
       message: error.message,
+      data: error,
     });
   }
 
