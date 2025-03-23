@@ -6,10 +6,11 @@ export const getContacts = async ({
   sortBy,
   sortOrder,
   filter = {},
+  userId,
 }) => {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
-  const contactQuery = Contact.find();
+  const contactQuery = Contact.find({ userId });
 
   if (filter.isFavourite) {
     contactQuery.where('isFavourite').equals(filter.isFavourite);
@@ -20,7 +21,7 @@ export const getContacts = async ({
   }
 
   const [totalItems, data] = await Promise.all([
-    Contact.countDocuments(contactQuery),
+    Contact.countDocuments({ userId, ...filter }),
     contactQuery
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
@@ -40,34 +41,28 @@ export const getContacts = async ({
   };
 };
 
-export const getContactsById = async (id) => {
-  return await Contact.findById(id);
+export const getContactsById = async (id, userId) => {
+  return await Contact.findById({ _id: id, userId });
 };
 
-export const createContact = async (contact) => {
-  return await Contact.create(contact);
+export const createContact = async (contact, userId) => {
+  return await Contact.create({ ...contact, userId });
 };
 
-export const updateContact = async (id, contact) => {
-  return await Contact.findByIdAndUpdate(id, contact, {
+export const updateContact = async (id, contact, userId) => {
+  return await Contact.findByIdAndUpdate({ _id: id, userId }, contact, {
     new: true,
     runValidators: true,
   });
 };
 
-export const deleteContact = async (id) => {
-  return await Contact.findByIdAndDelete(id);
+export const deleteContact = async (id, userId) => {
+  return await Contact.findByIdAndDelete({ _id: id, userId });
 };
 
-export const replaceContact = async (id, contact) => {
-  const result = await Contact.findByIdAndUpdate(id, contact, {
+export const replaceContact = async (id, contact, userId) => {
+  return await Contact.findByIdAndUpdate({ _id: id, userId }, contact, {
     new: true,
     upsert: true,
-    includeResultMetadata: true,
   });
-
-  return {
-    value: result.value,
-    updatedExisting: result.lastErrorObject.updatedExisting,
-  };
 };
