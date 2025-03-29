@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import router from './routers/index.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
 const PORT = process.env.PORT || 3000;
 
@@ -23,6 +24,8 @@ function setupServer() {
   );
 
   app.use(router);
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   app.use('*', notFoundHandler);
 
