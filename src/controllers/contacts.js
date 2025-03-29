@@ -10,6 +10,8 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilerParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export async function getContactsController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -50,32 +52,54 @@ export async function getContactByIdController(req, res) {
 
 export async function createContactController(req, res) {
   const { _id: userId } = req.user;
-  const result = await createContact(req.body, userId);
+  const photo = req.file;
+
+  let photoUrl;
+
+  if (photo) {
+    if (process.env.ENABLE_CLOUDINARY === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
+  const contact = await createContact({ ...req.body, userId, photo: photoUrl });
+
   res.status(201).json({
     status: 201,
     message: 'Successfully created a contact!',
-    data: result,
+    data: contact,
   });
 }
 
 export async function updateContactController(req, res, next) {
-  try {
-    const { id } = req.params;
-    const { _id: userId } = req.user;
-    const updatedContact = await updateContact(id, req.body, userId);
+  const { id } = req.params;
+  const { _id: userId } = req.user;
+  const photo = req.file;
 
-    if (!updatedContact) {
-      return next(createHttpError(404, 'Contact not found'));
+  let photoUrl;
+
+  if (photo) {
+    if (process.env.ENABLE_CLOUDINARY === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
     }
-
-    res.status(200).json({
-      status: 200,
-      message: 'Successfully patched a contact!',
-      data: updatedContact,
-    });
-  } catch (error) {
-    next(error);
   }
+  const updatedContact = await updateContact(
+    id,
+    { ...req.body, photo: photoUrl },
+    userId,
+  );
+
+  if (!updatedContact) throw createHttpError(404, 'Contact not found');
+
+  res.json({
+    status: 200,
+    message: 'Successfully patched a contact!',
+    data: updatedContact,
+  });
 }
 
 export async function deleteContactController(req, res) {
