@@ -44,6 +44,7 @@ requestBody:
             description: "Student's photo"
             type: string
             format: binary
+            example: https://res.cloudinary.com/dngckb7jc/image/upload/v1743250366/wfy1pblfjgsjtp14sku3.jpg
 responses:
   '201':
     description: Creates a contact
