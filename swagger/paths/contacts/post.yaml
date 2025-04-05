@@ -41,7 +41,7 @@ requestBody:
             type: string
             example: 65e4decdd286b30065d54af9
           photo:
-            description: "Student's photo"
+            description: "Contact's photo"
             type: string
             format: binary
             example: https://res.cloudinary.com/dngckb7jc/image/upload/v1743250366/wfy1pblfjgsjtp14sku3.jpg
