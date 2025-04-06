@@ -11,7 +11,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000"
+      "url": "https://nodejs-hw-mongodb-5-9a2h.onrender.com"
     }
   ],
   "tags": [
@@ -228,15 +228,11 @@
                     "type": "boolean",
                     "example": false
                   },
-                  "userId": {
-                    "description": "User's parent id",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
-                  },
                   "photo": {
-                    "description": "Student's photo",
+                    "description": "Contact's photo",
                     "type": "string",
-                    "format": "binary"
+                    "format": "binary",
+                    "example": "https://res.cloudinary.com/dngckb7jc/image/upload/v1743250366/wfy1pblfjgsjtp14sku3.jpg"
                   }
                 }
               }
@@ -411,7 +407,8 @@
                   "photo": {
                     "description": "Link to contact`s photo",
                     "format": "binary",
-                    "type": "string"
+                    "type": "string",
+                    "example": "https://res.cloudinary.com/dngckb7jc/image/upload/v1743250366/wfy1pblfjgsjtp14sku3.jpg"
                   }
                 }
               }
@@ -555,7 +552,9 @@
           },
           "photo": {
             "description": "Link to contact's photo",
-            "type": "string"
+            "type": "string",
+            "example": "https://res.cloudinary.com/dngckb7jc/image/upload/v1743250366/wfy1pblfjgsjtp14sku3.jpg",
+            "default": null
           }
         }
       }
